@@ -12,7 +12,7 @@ You need internet because React and Babel load from a CDN (cdnjs). If you're off
 
 ## Or... click here to play
 
-<a href="https://fatima-d09.github.io/Cup-of-Duty/">Play here</a>
+<a href="https://fatima-d09.github.io/Cup-of-Duty/" target="_blank">Play here</a>
  
 ## What it's built with
  
