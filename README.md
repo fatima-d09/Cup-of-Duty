@@ -3,9 +3,9 @@ Ticket style cafe game where user builds drinks for customers with varying degre
 
 ## How to run it
  
-There's no build step. It's one file, `cafe3.html`.
+There's no build step. It's one file, `index.html`.
  
-1. Download `cafe3.html`
+1. Download `index.html`
 2. Double click it
 3. Play
 You need internet because React and Babel load from a CDN (cdnjs). If you're offline it'll just be a blank page.
