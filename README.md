@@ -9,6 +9,10 @@ There's no build step. It's one file, `index.html`.
 2. Double click it
 3. Play
 You need internet because React and Babel load from a CDN (cdnjs). If you're offline it'll just be a blank page.
+
+## Or... click here to play
+
+<a href="https://fatima-d09.github.io/Cup-of-Duty/">Play here</a>
  
 ## What it's built with
  
