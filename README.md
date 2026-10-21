@@ -1,4 +1,4 @@
-# Cup-of-Duty
+# Cup of Duty . ݁₊ ⊹ 🥐. ݁˖ . ݁݁🥖
 Ticket style cafe game where user builds drinks for customers with varying degrees of patience.
 
 ## How to run it
