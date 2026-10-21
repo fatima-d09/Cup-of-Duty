@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Little Café</title>
+<style>
+:root{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:#d6cfc1}
+body{font:14px "Helvetica Neue",Helvetica,Arial,sans-serif;color:#2b2620}
+button{font:inherit;touch-action:manipulation;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+.app{position:fixed;inset:0;padding-top:env(safe-area-inset-top,0px);display:flex;flex-direction:column;
+background:repeating-linear-gradient(0deg,rgba(0,0,0,.035) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,.035) 0 1px,transparent 1px 3px),#d9d2c4}
+.awn{flex:none;height:36px;background:repeating-linear-gradient(90deg,#b8322a 0 30px,#f6eedd 30px 60px);position:relative;display:flex;align-items:center;justify-content:center;z-index:3}
+.awn::after{content:"";position:absolute;left:0;right:0;top:100%;height:15px;background:radial-gradient(circle at 15px 0,#b8322a 15px,transparent 16px) 0 0/60px 15px repeat-x,radial-gradient(circle at 45px 0,#f6eedd 15px,transparent 16px) 0 0/60px 15px repeat-x;filter:drop-shadow(0 2px 1px rgba(0,0,0,.28))}
+.sign{background:linear-gradient(#4a3424,#33231a);color:#f6e7c1;font:italic bold 16px Georgia,serif;padding:2px 16px;border-radius:4px;border:2px solid #e0b95a;box-shadow:0 2px 3px rgba(0,0,0,.45)}
+.scr{flex:1;overflow:auto;padding:26px 12px 14px}
+.scr.felt{background:radial-gradient(ellipse at 50% 35%,#35935f,#1a5a38 80%);box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
+.max{max-width:900px;margin:0 auto}
+.wrap{display:flex;flex-wrap:wrap;gap:14px}
+.aqua{font-weight:bold;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,.4);border:1px solid #1b5fa8;border-radius:16px;padding:8px 22px;background:linear-gradient(#7cc4fb,#2b8be6 50%,#1d78d8 51%,#47a3f0);box-shadow:0 1px 3px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.7)}
+.aqua:active{filter:brightness(.85)}
+.gray{font-weight:bold;color:#333;text-shadow:0 1px 0 #fff;border:1px solid #888;border-radius:5px;padding:6px 12px;background:linear-gradient(#fdfdfd,#d4d4d4)}
+.gray:active{background:linear-gradient(#bbb,#ddd)}
+/* shop header + rail */
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-weight:bold;color:#4a4235;font-size:13px}
+.rail{position:relative;padding-top:12px;margin-bottom:14px}
+.rail::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;border-radius:5px;background:linear-gradient(#eceef1,#9ea3aa);box-shadow:0 2px 3px rgba(0,0,0,.35)}
+.tix{display:flex;gap:10px;overflow-x:auto;padding:0 2px 10px;min-height:136px}
+.wait{align-self:center;color:#7a705f;font:italic 14px Georgia,serif;padding-left:6px}
+.tkt{flex:0 0 160px;text-align:left;background:#fffdf6;border:0;border-top:3px solid #b8322a;border-bottom:5px dotted #d9d2bd;padding:8px 10px;box-shadow:0 3px 5px rgba(0,0,0,.3);font:12px "Courier New",monospace;display:flex;flex-direction:column;gap:6px;color:#222}
+.tkt.on{outline:3px solid #2b8be6;transform:translateY(3px)}
+.th{display:flex;align-items:center;gap:6px;font:bold 12px Arial}
+.th span{margin-left:auto;font:bold 12px "Courier New",monospace}.th span.late{color:#d9442f}
+.tl{flex:1;line-height:1.35}
+.tm{height:6px;background:#e8e2d0;border-radius:3px;overflow:hidden}.tm i{display:block;height:100%;transition:width .25s linear}
+/* stage */
+.stage{flex:1 1 290px;min-height:330px;border-radius:10px;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;border:1px solid #8a7d66;box-shadow:0 4px 8px rgba(0,0,0,.28);
+background:linear-gradient(rgba(0,0,0,.07) 1px,transparent 1px) 0 0/44px 22px,linear-gradient(90deg,rgba(0,0,0,.07) 1px,transparent 1px) 0 0/44px 22px,linear-gradient(#f4eedf,#e3dac5)}
+.ctr{position:absolute;left:0;right:0;bottom:0;height:27%;background:repeating-linear-gradient(0deg,rgba(0,0,0,.1) 0 1px,transparent 1px 8px),linear-gradient(#b27a45,#83552b);border-top:3px solid #c99560;box-shadow:inset 0 6px 8px rgba(0,0,0,.25)}
+.cupw{position:relative;margin-bottom:5%;z-index:1;transition:width .25s}
+.who{position:absolute;left:10px;top:10px;z-index:2;background:rgba(255,255,255,.85);border-radius:14px;padding:3px 10px 3px 4px;display:flex;align-items:center;gap:6px;font-weight:bold;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.fb{position:absolute;z-index:5;inset:12px;margin:auto;height:max-content;max-width:250px;background:#fffdf6;border-radius:8px;padding:14px;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;gap:5px}
+.fb .stars{font-size:26px;letter-spacing:3px}.fb .pc{font:bold 12px "Courier New",monospace;color:#666}
+.fb .nt{font-size:12px;color:#8a3a2a}.fb .pay{font:bold 20px Georgia,serif;margin:2px 0 4px}.fb small{font:12px Arial;color:#666}
+.steam path{fill:none;stroke:rgba(110,110,110,.5);stroke-width:5;stroke-linecap:round}
+@media (prefers-reduced-motion:no-preference){.steam path{animation:rise 3.2s infinite ease-in}.steam path:nth-child(2){animation-delay:1s}.steam path:nth-child(3){animation-delay:2s}}
+@keyframes rise{0%{opacity:0;transform:translateY(12px)}40%{opacity:.9}100%{opacity:0;transform:translateY(-16px)}}
+/* panel */
+.panel{flex:1 1 300px;background:#fbf8f1;border:1px solid #d3c9b4;border-radius:10px;padding:12px;box-shadow:0 4px 8px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:12px}
+.seg{display:flex;border:1px solid #6b7f99;border-radius:6px;overflow:hidden;background:linear-gradient(#fff,#dfe5ee)}
+.seg button{flex:1;border:0;border-right:1px solid #6b7f99;background:none;padding:7px 2px;font-size:12px;font-weight:bold;color:#33425a}
+.seg button:last-child{border-right:0}
+.seg button.on{color:#fff;background:linear-gradient(#5a8fd0,#2d6cc0);box-shadow:inset 0 1px 3px rgba(0,0,0,.4);text-shadow:0 -1px 0 rgba(0,0,0,.4)}
+.pk{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.pk button{background:#fff;border:1px solid #c9bfa9;border-radius:18px;padding:7px 14px;display:flex;align-items:center;gap:6px;color:#2b2620}
+.pk button.on{border-color:#2d6cc0;background:#e6f0ff;box-shadow:inset 0 0 0 1px #2d6cc0;font-weight:bold}
+.pk s{width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.35)}
+.lab{font-size:11px;color:#8a7f6b;margin:8px 0 5px}
+.body2{min-height:128px}
+.sum{font:italic 13px Georgia,serif;color:#5b5243;min-height:34px;border-top:1px solid #e6dfce;padding-top:8px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.big{max-width:420px;margin:30px auto;background:#fbf8f1;border:1px solid #d3c9b4;border-radius:12px;padding:26px 22px;text-align:center;box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.big h2{margin:0 0 8px;font:bold 24px Georgia,serif}.big p{margin:0 0 16px;color:#5b5243;line-height:1.45}
+.stat{display:flex;justify-content:space-around;margin:14px 0 18px}.stat b{display:block;font:bold 22px Georgia,serif}.stat span{font-size:11px;color:#8a7f6b}
+.scr{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.sm{padding:4px 10px;font-size:12px}
+.hdr{gap:10px;flex-wrap:wrap}.hdr .hearts{font-size:20px;letter-spacing:2px}
+.toastrow{height:30px;margin-bottom:2px}
+.toast{background:#b8322a;color:#fff;font-weight:bold;border-radius:6px;padding:5px 12px;font-size:13px;display:inline-block;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.tkt{position:relative}
+.tkt.rush{background:#fff0ec;border-top-color:#d9342b}
+.rushtag{position:absolute;top:-9px;right:8px;background:#d9342b;color:#fff;font:bold 10px Arial;padding:2px 6px;border-radius:3px;letter-spacing:.5px;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+@media (prefers-reduced-motion:no-preference){.tkt.rush{animation:shake .6s infinite}}
+@keyframes shake{0%,100%{translate:0 0}25%{translate:-1.5px 0}75%{translate:1.5px 0}}
+.big{max-width:470px}
+.lb{margin-top:20px;text-align:left}
+.lb h3{margin:0 0 8px;font:bold 16px Georgia,serif;display:flex;justify-content:space-between;align-items:center}
+.lb .seg{width:150px;font-weight:normal}
+.lb table{width:100%;border-collapse:collapse;font-size:13px}
+.lb td,.lb th{padding:5px 4px;border-bottom:1px solid #e6dfce;text-align:left}
+.lb th{font-size:11px;color:#8a7f6b;font-weight:normal}
+.lb tr.me{background:#fff3c4;font-weight:bold}
+.rec{display:flex;justify-content:space-between;gap:6px;font-size:11px;color:#6b6252;margin-top:10px;flex-wrap:wrap}
+.lb .none{color:#8a7f6b;font:italic 13px Georgia,serif;padding:6px 0}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef}=React;
+const mix=(a,b,t)=>{const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+const DRINKS=[{id:'espresso',n:'Espresso',p:2.5,m:.12},{id:'americano',n:'Americano',p:3,m:.12},{id:'latte',n:'Latte',p:4,m:.65,foam:1},{id:'cappuccino',n:'Cappuccino',p:4,m:.45,foam:2},{id:'cold',n:'Cold Brew',p:4.25,m:.2}];
+const MILKS=[{id:'none',n:'No milk',c:'#ffffff',p:0},{id:'whole',n:'Whole',c:'#f5ecdc',p:0},{id:'oat',n:'Oat',c:'#ecd9b5',p:.7},{id:'almond',n:'Almond',c:'#f1e4cc',p:.7},{id:'soy',n:'Soy',c:'#efe5c6',p:.6}];
+const SYR=[{id:'vanilla',n:'Vanilla',c:'#f0d9a0'},{id:'caramel',n:'Caramel',c:'#c4801f'},{id:'hazelnut',n:'Hazelnut',c:'#8b5a2b'},{id:'mocha',n:'Mocha',c:'#4a2414'},{id:'lavender',n:'Lavender',c:'#a98bd0'},{id:'rose',n:'Rose',c:'#e58aa3'}];
+const TOP=[{id:'whip',n:'Whipped cream'},{id:'cinn',n:'Cinnamon'},{id:'choc',n:'Chocolate drizzle'},{id:'carm',n:'Caramel drizzle'},{id:'marsh',n:'Marshmallows'},{id:'sprk',n:'Sprinkles'}];
+const SIZES=[{id:'Small',n:'Small',s:.88,p:0},{id:'Medium',n:'Medium',s:1,p:.5},{id:'Large',n:'Large',s:1.12,p:1}];
+const TEMPS=[{id:'hot',n:'Hot'},{id:'iced',n:'Iced'}];
+const BODY="M48 64 L172 64 L156 196 Q155 207 145 207 L75 207 Q65 207 64 196 Z";
+const DOTS=Array.from({length:18},(_,i)=>[88+((i*37)%44),56+((i*53)%11),i]);
+
+function Cup({o}){
+ const d=DRINKS.find(x=>x.id===o.drink),mk=MILKS.find(x=>x.id===o.milk),sz=SIZES.find(x=>x.id===o.size);
+ const r=o.milk==='none'?0:d.m,coffee=o.drink==='cold'?'#2b160b':'#4a2a14';
+ const top=mix(coffee,mk.c,Math.min(1,r+.3)),mid=mix(coffee,mk.c,r),bot=mix(coffee,mk.c,Math.max(0,r-.4));
+ const sy=o.syrups.map(id=>SYR.find(s=>s.id===id).c),has=t=>o.tops.includes(t),w=has('whip'),ty=w?-16:0;
+ const foam=o.milk!=='none'&&d.foam,art=foam&&!w&&o.drink==='latte';
+ const Drz=({c,dy})=><path d="M76 58 Q88 46 100 58 T124 58 T148 58" transform={`translate(0 ${ty+dy})`} stroke={c} strokeWidth="3.5" fill="none" strokeLinecap="round"/>;
+ const Tops=<g>
+  {w&&[[110,56,50,13],[110,43,38,12],[110,31,25,11],[110,21,12,9]].map((e,i)=><ellipse key={i} cx={e[0]} cy={e[1]} rx={e[2]} ry={e[3]} fill="#fffdf7" stroke="#e4dac6"/>)}
+  {has('cinn')&&DOTS.map(([x,y,i])=><circle key={i} cx={x} cy={y+ty} r="1.5" fill="#a0522d"/>)}
+  {has('choc')&&<Drz c="#3a1e10" dy={0}/>}{has('carm')&&<Drz c="#d49230" dy={7}/>}
+  {has('marsh')&&[[88,60],[104,64],[120,58],[134,63],[111,54]].map(([x,y],i)=><rect key={i} x={x-6} y={y-6+ty} width="12" height="11" rx="4" fill="#fff" stroke="#efc3d0" transform={`rotate(${i*23-30} ${x} ${y+ty})`}/>)}
+  {has('sprk')&&DOTS.map(([x,y,i])=><rect key={i} x={x} y={y-2+ty} width="5" height="1.8" rx=".9" fill={['#e33','#fc2','#3b3','#29d','#e6c'][i%5]} transform={`rotate(${i*41} ${x} ${y+ty})`}/>)}
+ </g>;
+ return <svg width={240*sz.s} viewBox="0 0 240 230" style={{display:'block',overflow:'visible'}}>
+  <defs><linearGradient id="lq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={top}/><stop offset=".45" stopColor={mid}/><stop offset="1" stopColor={bot}/></linearGradient>
+   <linearGradient id="cr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d9d9d9"/><stop offset=".3" stopColor="#fff"/><stop offset="1" stopColor="#c8c8c8"/></linearGradient>
+   <radialGradient id="tp"><stop offset="0" stopColor={top}/><stop offset="1" stopColor={mix(top,'#000000',.35)}/></radialGradient>
+   <clipPath id="cp"><path d={BODY}/></clipPath></defs>
+  <ellipse cx="120" cy="214" rx="100" ry="13" fill="rgba(0,0,0,.28)"/>
+  <ellipse cx="120" cy="208" rx="92" ry="12" fill="#f4f4f4" stroke="#bbb"/><ellipse cx="120" cy="206" rx="64" ry="7" fill="#e2e2e2"/>
+  <g transform="translate(10 0)">
+  {o.iced?<g>
+   <g clipPath="url(#cp)"><rect x="40" y="76" width="140" height="140" fill="url(#lq)"/>
+    {sy.map((c,i)=><rect key={i} x="40" y={193-i*14} width="140" height="14" fill={c} opacity=".85"/>)}
+    {[[82,96,-12],[116,108,14],[92,140,8],[128,150,-18]].map(([x,y,a],i)=><rect key={i} x={x} y={y} width="26" height="26" rx="5" fill="rgba(255,255,255,.4)" stroke="rgba(255,255,255,.8)" transform={`rotate(${a} ${x+13} ${y+13})`}/>)}</g>
+   <ellipse cx="110" cy="76" rx="57" ry="9" fill="url(#tp)"/>
+   <path d="M126 -2 L116 150" stroke="#d33" strokeWidth="7"/><path d="M126 -2 L116 150" stroke="#fff" strokeWidth="7" strokeDasharray="6 8"/>
+   <path d={BODY} fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.9)" strokeWidth="2"/><rect x="58" y="76" width="7" height="110" rx="3" fill="rgba(255,255,255,.4)"/>
+   <ellipse cx="110" cy="64" rx="62" ry="12" fill="none" stroke="rgba(255,255,255,.9)" strokeWidth="2"/>
+  </g>:<g>
+   <path d="M168 84 Q205 80 198 118 Q190 150 156 160" fill="none" stroke="#e8e8e8" strokeWidth="14" strokeLinecap="round"/><path d="M168 84 Q205 80 198 118 Q190 150 156 160" fill="none" stroke="#bbb" strokeWidth="1"/>
+   <path d={BODY} fill="url(#cr)" stroke="#aaa"/><ellipse cx="110" cy="64" rx="62" ry="12" fill="#f2f2f2" stroke="#aaa"/>
+   <ellipse cx="110" cy="65" rx="55" ry="9.5" fill="url(#tp)"/>
+   {foam&&<ellipse cx="110" cy={d.foam===2?62:64} rx="52" ry={d.foam===2?10:8} fill="#f6eddc" opacity={d.foam===2?1:.85}/>}
+   {sy.map((c,i)=><path key={i} d={`M${82+i*6} ${64+i*3} Q110 ${72-i*4} ${138-i*6} ${64+i*3}`} stroke={c} strokeWidth="3" fill="none" opacity=".75"/>)}
+   {art&&<path d="M110 72 C95 63 100 54 110 60 C120 54 125 63 110 72Z" fill="#fbf5e8"/>}
+  </g>}
+  {Tops}
+  {!o.iced&&<g className="steam" transform="translate(0 -6)"><path d="M92 38 q-8 -10 0 -20 t0 -18"/><path d="M112 34 q-8 -10 0 -20 t0 -18"/><path d="M132 38 q-8 -10 0 -20 t0 -18"/></g>}
+  </g></svg>;
+}
+
+/* shop logic */
+const DEF={drink:'latte',size:'Medium',iced:false,milk:'whole',syrups:[],tops:[]};
+const NAMES=['Maya','Theo','June','Ravi','Ines','Sam','Noor','Luca','Aiko','Dana','Priya','Marcus'];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const pickN=(a,n)=>[...a].sort(()=>Math.random()-.5).slice(0,n);
+const priceOf=o=>DRINKS.find(x=>x.id===o.drink).p+SIZES.find(x=>x.id===o.size).p+MILKS.find(x=>x.id===o.milk).p+o.syrups.length*.5+o.tops.length*.5;
+const lines=o=>[`${o.size} ${o.iced?'iced':'hot'} ${DRINKS.find(x=>x.id===o.drink).n}`,o.milk!=='none'&&`${MILKS.find(x=>x.id===o.milk).n} milk`,...o.syrups.map(id=>SYR.find(s=>s.id===id).n+' syrup'),...o.tops.map(id=>TOP.find(t=>t.id===id).n)].filter(Boolean);
+const jac=(a,b)=>{const u=new Set([...a,...b]);if(!u.size)return 1;return a.filter(x=>b.includes(x)).length/u.size};
+function grade(w,g){const notes=[];let p=0;
+ if(w.drink===g.drink)p+=30;else notes.push('wanted a '+DRINKS.find(x=>x.id===w.drink).n.toLowerCase());
+ if(w.size===g.size)p+=10;else notes.push('wrong size');
+ if(w.iced===g.iced)p+=10;else notes.push(w.iced?'wanted it iced':'wanted it hot');
+ if(w.milk===g.milk)p+=15;else notes.push(w.milk==='none'?'no milk please':'wanted '+MILKS.find(x=>x.id===w.milk).n.toLowerCase()+' milk');
+ const sj=jac(w.syrups,g.syrups);p+=15*sj;if(sj<1)notes.push('syrup was off');
+ const tj=jac(w.tops,g.tops);p+=20*tj;if(tj<1)notes.push('toppings were off');
+ return{pct:Math.round(p),notes}}
+const stars=p=>p>=95?3:p>=75?2:p>=50?1:0;
+const REACT=['Walked out unhappy.','Not quite right…','Pretty good, thanks!','Perfect. Thank you!'];
+const LS='littlecafe_runs_v2';
+const load=()=>{try{return JSON.parse(localStorage.getItem(LS))||[]}catch(e){return[]}};
+const store=r=>{try{localStorage.setItem(LS,JSON.stringify(r))}catch(e){}};
+
+function mk(id,used,n){
+ const drink=rnd(DRINKS).id;
+ const o={drink,size:rnd(SIZES).id,iced:drink==='cold'||Math.random()<.45,milk:Math.random()<.2?'none':rnd(MILKS.slice(1)).id,syrups:pickN(SYR.map(x=>x.id),Math.floor(Math.random()*3)),tops:pickN(TOP.map(x=>x.id),Math.floor(Math.random()*3))};
+ const rush=n>=2&&Math.random()<Math.min(.35,.14+n*.012);
+ const base=(50+(o.syrups.length+o.tops.length+(o.milk!=='none'?1:0))*10)*Math.max(.6,1-n*.015);
+ const max=Math.round(rush?Math.max(20,base*.5):base);
+ return{id,o,rush,name:rnd(NAMES.filter(x=>!used.includes(x))),face:Math.floor(Math.random()*20),left:max,max}}
+function tick(s,dt){
+ if(s.ph!=='play'||s.fb||s.paused)return s;
+ let t=s.t.map(x=>({...x,left:x.left-dt}));
+ const lost=t.filter(x=>x.left<=0);t=t.filter(x=>x.left>0);
+ let n=s.n,next=s.next-dt,hearts=s.hearts,done=s.done,streak=s.streak;
+ let toast=s.toast&&s.toast.left-dt>0?{...s.toast,left:s.toast.left-dt}:null;
+ if(lost.length){hearts-=lost.length;streak=0;done=[...done,...lost.map(x=>({name:x.name,pct:0,late:true}))];toast={text:lost[0].name+' walked out!',left:3}}
+ if(hearts<=0)return{...s,hearts:0,t:[],done,streak,ph:'done',toast:null};
+ if(t.length<(n<8?3:4)&&(next<=0||!t.length)){const x=mk(n,t.map(q=>q.name),n);
+  if(x.rush){t.unshift(x);toast={text:'Rush order! '+x.name+' wants it now.',left:3.5}}else t.push(x);
+  n++;next=Math.max(5,12-n*.3)+Math.random()*5}
+ return{...s,t,n,next,done,hearts,streak,toast,sel:t.some(x=>x.id===s.sel)?s.sel:(t[0]?t[0].id:null)}}
+const INIT={ph:'idle',t:[],n:0,next:0,done:[],profit:0,hearts:3,sel:null,fb:null,streak:0,bs:0,times:[],fast:null,paused:false,toast:null};
+
+const SK=['#f2c9a0','#d9a273','#a8704a','#6f4730'],HR=['#2b1b10','#6b3a1a','#c9922a','#9b9b9b','#b8322a'];
+const Face=({k,a})=><svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill={a?'#ffc9bf':'#cfe3f5'}/><circle cx="13" cy="14" r="7" fill={SK[k%4]}/><path d="M6 13a7 7 0 0 1 14 0c-3-3-11-3-14 0z" fill={HR[(k>>2)%5]}/>
+ {a?<><path d="M8 11.5l4 1.6M18 11.5l-4 1.6" stroke="#222" strokeWidth="1.2"/><circle cx="10.5" cy="14.5" r=".9" fill="#222"/><circle cx="15.5" cy="14.5" r=".9" fill="#222"/><path d="M10.5 19q2.5-2.4 5 0" stroke="#222" fill="none" strokeWidth="1"/></>
+ :<><circle cx="10.5" cy="14" r=".9" fill="#222"/><circle cx="15.5" cy="14" r=".9" fill="#222"/><path d="M10.5 17q2.5 2 5 0" stroke="#222" fill="none" strokeWidth=".9"/></>}</svg>;
+const Pick=({items,val,on,multi,sw})=><div className="pk">{items.map(it=>{const a=multi?val.includes(it.id):val===it.id;return <button key={it.id} className={a?'on':''} onClick={()=>on(it.id)}>{sw&&<s style={{background:it.c}}/>}{it.n}</button>})}</div>;
+const CATS=[['drink','Drink'],['cup','Cup'],['milk','Milk'],['syrup','Syrup'],['top','Toppings']];
+
+function Board({lb,last}){
+ const [m,setM]=useState('profit');
+ const rows=lb.filter(r=>m==='profit'||(r.served>=3&&r.avgT!=null)).sort((a,b)=>m==='profit'?b.profit-a.profit:a.avgT-b.avgT).slice(0,6);
+ const fasts=lb.filter(r=>r.fast!=null).map(r=>r.fast);
+ return <div className="lb"><h3>Leaderboard<div className="seg"><button className={m==='profit'?'on':''} onClick={()=>setM('profit')}>Profit</button><button className={m==='speed'?'on':''} onClick={()=>setM('speed')}>Speed</button></div></h3>
+  {!rows.length?<div className="none">{m==='profit'?'No shifts yet. Be the first on the board.':'Serve at least 3 drinks in a shift to rank by speed.'}</div>:
+  <table><thead><tr><th>#</th><th>{m==='profit'?'Profit':'Avg time'}</th><th>Served</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>
+   {rows.map((r,i)=><tr key={r.id} className={r.id===last?'me':''}><td>{i+1}</td><td>{m==='profit'?'$'+r.profit.toFixed(2):r.avgT.toFixed(1)+'s'}</td><td>{r.served}</td><td>{r.acc}%</td><td>{r.date}</td></tr>)}</tbody></table>}
+  {lb.length>0&&<div className="rec"><span>Best profit ${Math.max(...lb.map(r=>r.profit)).toFixed(2)}</span><span>Fastest perfect serve {fasts.length?Math.min(...fasts).toFixed(1)+'s':'–'}</span><span>Best streak {Math.max(...lb.map(r=>r.bs))}</span><span>Most served {Math.max(...lb.map(r=>r.served))}</span></div>}
+  <div className="rec"><span>Scores are saved on this device.</span></div></div>;
+}
+
+function Shop(){
+ const [s,setS]=useState(INIT),[o,setO]=useState(DEF),[cat,setCat]=useState('drink'),[lb,setLb]=useState(load),[last,setLast]=useState(null),[cc,setCc]=useState(false);
+ const saved=useRef(true);
+ const set=(k,v)=>setO(p=>({...p,[k]:v}));
+ const tog=(k,id,max)=>setO(p=>{const a=p[k];return{...p,[k]:a.includes(id)?a.filter(x=>x!==id):[...a,id].slice(-max)}});
+ useEffect(()=>{const id=setInterval(()=>{if(!document.hidden)setS(p=>tick(p,.25))},250);return()=>clearInterval(id)},[]);
+ useEffect(()=>{if(s.ph==='done'&&!s.fb&&!saved.current){saved.current=true;
+  const sv=s.done.filter(d=>!d.late);if(!sv.length)return;
+  const run={id:Date.now(),profit:s.profit,served:sv.length,acc:Math.round(s.done.reduce((a,d)=>a+d.pct,0)/s.done.length),avgT:+(s.times.reduce((a,b)=>a+b,0)/s.times.length).toFixed(1),fast:s.fast,bs:s.bs,date:new Date().toLocaleDateString([], {month:'short',day:'numeric'})};
+  const n=[...lb,run].slice(-40);setLb(n);store(n);setLast(run.id)}},[s.ph,s.fb]);
+ const start=()=>{setO(DEF);setCat('drink');saved.current=false;setLast(null);const f=mk(0,[],0);setS({...INIT,ph:'play',t:[f],n:1,next:8,sel:f.id})};
+ const end=()=>{setCc(false);setS(p=>({...p,ph:'done',t:[],paused:false}))};
+ const askEnd=()=>{if(cc)end();else{setCc(true);setTimeout(()=>setCc(false),3000)}};
+ const cur=s.t.find(x=>x.id===s.sel);
+ const serve=()=>{if(!cur)return;
+  const {pct,notes}=grade(cur.o,o),base=priceOf(cur.o),tip=pct>=80?base*.4*cur.left/cur.max:0,mult=cur.rush&&pct>=50?1.5:1,
+   total=+((base*pct/100+tip)*mult).toFixed(2),cost=+(base*.3).toFixed(2),time=cur.max-cur.left,t=s.t.filter(q=>q.id!==cur.id),streak=pct>=75?s.streak+1:0;
+  setS({...s,t,sel:t[0]?t[0].id:null,profit:+(s.profit+total-cost).toFixed(2),done:[...s.done,{name:cur.name,pct,time}],times:[...s.times,time],
+   fast:pct>=90&&(s.fast==null||time<s.fast)?time:s.fast,streak,bs:Math.max(s.bs,streak),
+   fb:{name:cur.name,face:cur.face,rush:cur.rush&&pct>=50,pct,notes,total,cost,tip:+(tip*mult).toFixed(2),time}});setO(DEF)};
+
+ if(s.ph==='idle')return <div className="big"><h2>Open the shop</h2><p>Customers keep coming. Match each ticket before its timer runs out. Three walkouts and you’re closed. Watch for rush orders: they want it now, and they pay extra.</p><button className="aqua" onClick={start}>Start a shift</button><Board lb={lb} last={null}/></div>;
+ if(s.ph==='done'&&!s.fb){
+  const sv=s.done.filter(d=>!d.late),acc=s.done.length?Math.round(s.done.reduce((a,d)=>a+d.pct,0)/s.done.length):0,avgT=s.times.length?(s.times.reduce((a,b)=>a+b,0)/s.times.length).toFixed(1):'–';
+  return <div className="big"><h2>{s.hearts<=0?'Shop’s closed':'Shift over'}</h2><p style={{margin:'0 0 4px'}}>{s.hearts<=0?'Three customers walked out.':'You closed up for the day.'}</p>
+   <div style={{fontSize:30,letterSpacing:4}}>{[0,1,2].map(i=><span key={i} style={{color:i<stars(acc)?'#f0b429':'#d9d2bd'}}>★</span>)}</div>
+   <div className="stat"><div><b>${s.profit.toFixed(2)}</b><span>profit</span></div><div><b>{sv.length}</b><span>served</span></div><div><b>{acc}%</b><span>accuracy</span></div><div><b>{avgT}{avgT==='–'?'':'s'}</b><span>avg time</span></div></div>
+   <button className="aqua" onClick={start}>Start another shift</button><Board lb={lb} last={last}/></div>}
+ if(s.paused)return <div className="big"><h2>Paused</h2><p>Timers are stopped.</p><button className="aqua" onClick={()=>setS(p=>({...p,paused:false}))}>Resume</button> <button className="gray" onClick={askEnd}>{cc?'Tap again to close':'Close shop'}</button></div>;
+
+ const body=cat==='drink'?<Pick items={DRINKS} val={o.drink} on={v=>set('drink',v)}/>
+  :cat==='cup'?<><div className="lab">Size</div><Pick items={SIZES} val={o.size} on={v=>set('size',v)}/><div className="lab">Temperature</div><Pick items={TEMPS} val={o.iced?'iced':'hot'} on={v=>set('iced',v==='iced')}/></>
+  :cat==='milk'?<Pick items={MILKS} val={o.milk} on={v=>set('milk',v)}/>
+  :cat==='syrup'?<><Pick items={SYR} val={o.syrups} multi sw on={id=>tog('syrups',id,2)}/><div className="lab">Pick up to two</div></>
+  :<Pick items={TOP} val={o.tops} multi on={id=>tog('tops',id,6)}/>;
+ return <div className="max">
+  <div className="hdr"><span className="hearts">{[0,1,2].map(i=><span key={i} style={{color:i<s.hearts?'#d9342b':'#c9c0ad'}}>♥</span>)}</span>
+   <span>Streak {s.streak}</span><span>Profit ${s.profit.toFixed(2)}</span>
+   <span><button className="gray sm" disabled={!!s.fb} onClick={()=>setS(p=>({...p,paused:true}))}>Pause</button></span></div>
+  <div className="toastrow">{s.toast&&<div className="toast">{s.toast.text}</div>}</div>
+  <div className="rail"><div className="tix">
+   {!s.t.length&&<div className="wait">Waiting for the next customer…</div>}
+   {s.t.map(x=>{const f=Math.max(0,x.left/x.max);return <button key={x.id} className={'tkt '+(x.rush?'rush ':'')+(s.sel===x.id?'on':'')} onClick={()=>setS(p=>({...p,sel:x.id}))}>
+    {x.rush&&<div className="rushtag">RUSH · NOW!</div>}
+    <div className="th"><Face k={x.face} a={x.rush}/>{x.name}<span className={f<.25?'late':''}>{Math.ceil(x.left)}s</span></div>
+    <div className="tl">{lines(x.o).map((l,i)=><div key={i}>{l}</div>)}</div>
+    <div className="tm"><i style={{width:f*100+'%',background:f>.5?'#4cae4c':f>.25?'#e8b020':'#d9442f'}}/></div></button>})}
+  </div></div>
+  <div className="wrap">
+   <div className="stage"><div className="ctr"/>
+    {cur&&<div className="who"><Face k={cur.face} a={cur.rush}/>{cur.rush?'Rush: ':'For '}{cur.name}</div>}
+    <div className="cupw" style={{width:240*SIZES.find(x=>x.id===o.size).s}}><Cup o={o}/></div>
+    {s.fb&&<div className="fb"><Face k={s.fb.face}/><b>{s.fb.name}</b>
+     <div className="stars">{[0,1,2].map(i=><span key={i} style={{color:i<stars(s.fb.pct)?'#f0b429':'#d9d2bd'}}>★</span>)}</div>
+     <div>{REACT[stars(s.fb.pct)]}</div><div className="pc">{s.fb.pct}% match · {Math.round(s.fb.time)}s</div>
+     {s.fb.notes.length>0&&<div className="nt">{s.fb.notes.join(' · ')}</div>}
+     <div className="pay">+${s.fb.total.toFixed(2)}{s.fb.tip>0&&<small> incl. ${s.fb.tip.toFixed(2)} tip</small>}</div>
+     <small>{s.fb.rush?'Rush bonus ×1.5 · ':''}ingredients −${s.fb.cost.toFixed(2)}</small>
+     <button className="aqua" style={{marginTop:6}} onClick={()=>setS(p=>({...p,fb:null}))}>Next customer</button></div>}
+   </div>
+   <div className="panel">
+    <div className="seg">{CATS.map(([id,n])=><button key={id} className={cat===id?'on':''} onClick={()=>setCat(id)}>{n}</button>)}</div>
+    <div className="body2">{body}</div>
+    <div className="sum">{lines(o).join(' · ')}</div>
+    <div className="foot"><button className="gray" onClick={()=>setO(DEF)}>Reset cup</button><button className="aqua" disabled={!cur||!!s.fb} onClick={serve}>{cur?'Serve '+cur.name:'No customer'}</button></div>
+   </div></div>
+  <div style={{textAlign:'center',marginTop:12}}><button className="gray sm" disabled={!!s.fb} onClick={askEnd}>{cc?'Tap again to close shop':'Close shop'}</button></div></div>;
+}
+
+function App(){
+ return <div className="app"><div className="awn"><div className="sign">Little Café</div></div><div className="scr"><Shop/></div></div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
