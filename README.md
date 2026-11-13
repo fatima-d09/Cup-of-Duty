@@ -1,16 +1,7 @@
 # Cup of Duty . ݁₊ ⊹ 🥐. ݁˖ . ݁݁🥖
 Ticket style cafe game where user builds drinks for customers with varying degrees of patience.
 
-## How to run it
- 
-There's no build step. It's one file, `index.html`.
- 
-1. Download `index.html`
-2. Double click it
-3. Play
-You need internet because React and Babel load from a CDN (cdnjs). If you're offline it'll just be a blank page.
-
-## Or... click here to play
+## Click here to play
 
 <a href="https://fatima-d09.github.io/Cup-of-Duty/" target="_blank">Play here</a>
  
